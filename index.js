@@ -26,7 +26,25 @@ Display.prototype.clear = function () {
   let libraryForm = document.getElementById("libraryForm");
   libraryForm.reset();
 };
+Display.prototype.validate = function (book) {
+  if (book.name.length < 2 || book.author.length < 2) {
+    return false;
+  }
+  return true;
+};
 
+Display.prototype.show = function (type, displayMessage) {
+  let message = document.getElementById("message");
+  message.innerHTML = `
+  <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+  <strong>Message: </strong>${displayMessage}
+  <!-- <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+</div>
+`;
+  setTimeout(() => {
+    message.innerHTML = ``;
+  }, 2000);
+};
 // Add submit event listener
 let libraryForm = document.getElementById("libraryForm");
 libraryForm.addEventListener("submit", libraryFormSubmit);
@@ -54,8 +72,10 @@ function libraryFormSubmit(e) {
   if (display.validate(book)) {
     display.add(book);
     display.clear();
+    display.show("success", "Your book has been added successfully");
   } else {
     // Show error to user
+    display.show("danger", "sorry you cannot add this book");
   }
   e.preventDefault();
 }
